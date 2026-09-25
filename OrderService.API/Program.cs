@@ -1,6 +1,11 @@
+using BuildingBlocks.Interfaces;
+using BuildingBlocks.Messaging;
+using BuildingBlocks.OutBox;
+using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Application.Interfaces;
 using OrderService.Infrastructure;
+using OrderService.Infrastructure.Messaging;
 using OrderService.Infrastructure.Persistence;
 using OrderService.Infrastructure.Services;
 
@@ -17,7 +22,19 @@ builder.Services.AddDependencyInjection();
 builder.Services.AddDbContext<OrderDbContext>(options =>
     options.UseSqlServer(
     builder.Configuration.GetConnectionString("OrderDb")));
+builder.Services.AddSingleton<IProducer<string, string>>(sp =>
+{
+    var config = new ProducerConfig
+    {
+        BootstrapServers =
+            builder.Configuration["Kafka:BootstrapServers"]
+    };
 
+    return new ProducerBuilder<string, string>(config)
+        .Build();
+});
+
+builder.Services.AddSingleton<IEventPublisher, KafkaEventPublisher>();
 builder.Services.AddHttpClient<
     IProductServiceClient,
     ProductServiceClient>(client =>
@@ -25,6 +42,15 @@ builder.Services.AddHttpClient<
         client.BaseAddress = new Uri(
             builder.Configuration["Services:ProductService"]!);
     });
+builder.Services.AddHttpClient<
+IPaymentServiceClient,
+PaymentServiceClient>(client =>
+{
+    client.BaseAddress = new Uri(
+            builder.Configuration["Services:PaymentService"]!);
+});
+builder.Services.AddHostedService<PaymentStatusChangeConsumer>();
+builder.Services.AddHostedService<OutboxPublisher>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

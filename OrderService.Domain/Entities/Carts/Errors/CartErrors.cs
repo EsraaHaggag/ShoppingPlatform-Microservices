@@ -60,5 +60,9 @@ namespace OrderService.Domain.Entities.Carts.Errors
                 "ProductService.InvalidResponse",
                 "Invalid response from ProductService.",
                 ErrorType.Unexpected);
+
+        public static readonly Error PriceChanged = Error.Conflict(
+        "Cart.PriceChanged",
+        "The price of one or more products has changed. Please review your cart before checkout.");
     }
 }

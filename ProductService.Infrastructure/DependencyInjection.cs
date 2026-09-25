@@ -46,6 +46,10 @@ namespace ProductService.Infrastructure
                 IProductRepository,
                 ProductRepository>();
 
+            services.AddScoped<
+                IProcessedEventRepository,
+                ProcessedEventRepository>();
+
             return services;
         }
     }

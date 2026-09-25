@@ -6,5 +6,7 @@ namespace ProductService.Application.Interfaces
     public interface IProductRepository : IGenericRepositoryAsync<Product>
     {
         public IQueryable<Product> GetQueryable();
+        Task<IReadOnlyList<Product>> GetByIdsAsync(IReadOnlyCollection<Guid> ids,
+          CancellationToken cancellationToken);
     }
 }

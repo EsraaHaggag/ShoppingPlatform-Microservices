@@ -18,6 +18,7 @@ namespace OrderService.Infrastructure.Repositories
          CancellationToken cancellationToken)
         {
             return await _carts
+                .Include(x => x.Items)
                 .FirstOrDefaultAsync(
                     c => c.CustomerId == customerId,
                     cancellationToken);

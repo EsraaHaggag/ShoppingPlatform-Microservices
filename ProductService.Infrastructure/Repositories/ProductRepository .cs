@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ProductService.Application.Interfaces;
 using ProductService.Domain.Entities.Products;
 using ProductService.Infrastructure.Persistence;
+
 namespace ProductService.Infrastructure.Repositories
 {
     public class ProductRepository : GenericRepositoryAsync<Product>, IProductRepository
@@ -13,6 +14,14 @@ namespace ProductService.Infrastructure.Repositories
             _products = dbContext.Products;
         }
 
+        public async Task<IReadOnlyList<Product>> GetByIdsAsync(
+          IReadOnlyCollection<Guid> ids,
+          CancellationToken cancellationToken)
+        {
+            return await _products
+                .Where(p => ids.Contains(p.Id))
+                .ToListAsync(cancellationToken);
+        }
 
         public IQueryable<Product> GetQueryable()
         {

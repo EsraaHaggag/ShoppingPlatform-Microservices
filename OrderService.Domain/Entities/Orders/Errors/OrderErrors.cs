@@ -33,5 +33,11 @@ namespace OrderService.Domain.Entities.Orders.Errors
             Error.Conflict(
                 "Order.CannotCancel",
                 "Completed order cannot be cancelled.");
+
+        public static readonly Error OrderNotFound =
+       Error.NotFound(
+           "Order.NotFound",
+           "Order was not found.");
+
     }
 }

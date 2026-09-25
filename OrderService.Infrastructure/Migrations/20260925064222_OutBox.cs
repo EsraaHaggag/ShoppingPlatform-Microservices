@@ -1,0 +1,60 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace OrderService.Infrastructure.Migrations
+{
+    /// <inheritdoc />
+    public partial class OutBox : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "OutboxMessages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Topic = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Key = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Payload = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OccurredOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProcessedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Error = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProcessedEvents",
+                columns: table => new
+                {
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ProcessedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcessedEvents", x => x.EventId);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OutboxMessages_ProcessedOnUtc",
+                table: "OutboxMessages",
+                column: "ProcessedOnUtc");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "OutboxMessages");
+
+            migrationBuilder.DropTable(
+                name: "ProcessedEvents");
+        }
+    }
+}

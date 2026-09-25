@@ -59,7 +59,7 @@ namespace OrderService.Application.Features.Carts.Commands.AddCartItem
                 request.Quantity);
 
             if (result.IsFailure)
-                return result;
+                return Result.Failure(result.Error);
 
             await _cartRepository.CompleteAsync(
                 cancellationToken);

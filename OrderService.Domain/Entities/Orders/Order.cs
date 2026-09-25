@@ -81,7 +81,21 @@ namespace OrderService.Domain.Entities.Orders
             TotalAmount = _items.Sum(x => x.TotalPrice);
         }
 
+        public Result MarkAsPaid()
+        {
+            if (Status != OrderStatus.Pending)
+            {
+                return Result.Failure(
+                    new Error(
+                        "Order.InvalidStatus",
+                        "Order cannot be marked as paid.",
+                        ErrorType.Validation));
+            }
 
+            Status = OrderStatus.Completed;
+
+            return Result.Success();
+        }
 
     }
 }

@@ -1,5 +1,9 @@
+using BuildingBlocks.Interfaces;
+using BuildingBlocks.Messaging;
+using Confluent.Kafka;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Infrastructure;
+using ProductService.Infrastructure.Messaging;
 using ProductService.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +19,19 @@ builder.Services.AddDependencyInjection();
 builder.Services.AddDbContext<ProductDbContext>(options =>
     options.UseSqlServer(
       builder.Configuration.GetConnectionString("ProductDb")));
+builder.Services.AddSingleton<IProducer<string, string>>(sp =>
+{
+    var config = new ProducerConfig
+    {
+        BootstrapServers =
+            builder.Configuration["Kafka:BootstrapServers"]
+    };
 
+    return new ProducerBuilder<string, string>(config)
+        .Build();
+});
+builder.Services.AddHostedService<OrderPaidConsumer>();
+builder.Services.AddSingleton<IEventPublisher, KafkaEventPublisher>();
 
 var app = builder.Build();
 

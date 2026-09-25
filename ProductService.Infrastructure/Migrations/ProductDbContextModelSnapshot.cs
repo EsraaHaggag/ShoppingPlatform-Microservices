@@ -22,6 +22,19 @@ namespace ProductService.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("ProductService.Domain.Entities.ProcessedEvent", b =>
+                {
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("EventId");
+
+                    b.ToTable("ProcessedEvents");
+                });
+
             modelBuilder.Entity("ProductService.Domain.Entities.Products.Product", b =>
                 {
                     b.Property<Guid>("Id")

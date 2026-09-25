@@ -37,14 +37,13 @@ namespace OrderService.Domain.Entities.Carts
         {
             if (quantity <= 0)
                 return Result.Failure(
-                    CartErrors.InvalidQuantity);
-
+             CartErrors.InvalidQuantity);
             var existingItem = _items
                 .FirstOrDefault(x => x.ProductId == productId);
 
             if (existingItem is not null)
             {
-                var newQuantity = existingItem.Quantity + quantity;
+                var newQuantity = quantity;
 
                 return existingItem.UpdateQuantity(newQuantity);
             }
@@ -61,7 +60,7 @@ namespace OrderService.Domain.Entities.Carts
         public Result RemoveItem(Guid itemId)
         {
             var item = _items
-                .FirstOrDefault(x => x.Id == itemId);
+                .FirstOrDefault(x => x.ProductId == itemId);
             if (item is null)
                 return Result.Failure(
                     CartErrors.ItemNotFound);
@@ -73,9 +72,9 @@ namespace OrderService.Domain.Entities.Carts
         {
             if (quantity <= 0)
                 return Result.Failure(
-                    CartErrors.InvalidQuantity);
+                CartErrors.InvalidQuantity);
             var item = _items
-                .FirstOrDefault(x => x.Id == itemId);
+                .FirstOrDefault(x => x.ProductId == itemId);
             if (item is null)
                 return Result.Failure(
                     CartErrors.ItemNotFound);

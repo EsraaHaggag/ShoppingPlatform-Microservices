@@ -8,6 +8,7 @@ using ProductService.Application.Features.Products.Commands.Reactivate;
 using ProductService.Application.Features.Products.Commands.UpdatePrice;
 using ProductService.Application.Features.Products.Queries.GetAllProduct;
 using ProductService.Application.Features.Products.Queries.GetProductById;
+using ProductService.Application.Features.Products.Queries.GetProductsByIds;
 
 namespace ProductService.API.Controllers
 {
@@ -150,6 +151,21 @@ namespace ProductService.API.Controllers
                 return HandleFailure(result);
 
             return Ok(result);
+        }
+
+        [HttpPost("batch")]
+        public async Task<IActionResult> GetProducts(GetProductsByIdsQuery request, CancellationToken cancellationToken)
+        {
+            var query = new GetProductsByIdsQuery(request.ProductIds);
+
+            var result = await _mediator.Send(
+                query,
+                cancellationToken);
+
+            if (result.IsFailure)
+                return HandleFailure(result);
+
+            return Ok(result.Value);
         }
     }
 }

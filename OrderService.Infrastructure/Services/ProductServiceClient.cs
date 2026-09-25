@@ -16,9 +16,8 @@ namespace OrderService.Infrastructure.Services
             _httpClient = httpClient;
         }
 
-        public async Task<Result<ProductInfoDto>> GetProductAsync(
-    Guid productId,
-    CancellationToken cancellationToken)
+        public async Task<Result<ProductInfoDto>> GetProductAsync(Guid productId,
+        CancellationToken cancellationToken)
         {
             var response = await _httpClient.GetAsync(
                 $"api/products/{productId}",
@@ -46,6 +45,33 @@ namespace OrderService.Infrastructure.Services
             }
 
             return Result<ProductInfoDto>.Success(product);
+        }
+
+        public async Task<Result<IReadOnlyList<ProductInfoDto>>> GetProductsAsync(
+          IReadOnlyCollection<Guid> productIds, CancellationToken cancellationToken)
+        {
+            var request = new
+            {
+                ProductIds = productIds
+            };
+
+            var response = await _httpClient.PostAsJsonAsync(
+                "api/products/batch",
+                request,
+                cancellationToken);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return Result<IReadOnlyList<ProductInfoDto>>.Failure(CartErrors.ServiceUnavailable);
+            }
+
+            var products = await response.Content.ReadFromJsonAsync<IReadOnlyList<ProductInfoDto>>(cancellationToken);
+
+            if (products is null)
+            {
+                return Result<IReadOnlyList<ProductInfoDto>>.Failure(CartErrors.InvalidResponse);
+            }
+            return Result<IReadOnlyList<ProductInfoDto>>.Success(products);
         }
     }
 }

@@ -8,5 +8,9 @@ namespace OrderService.Application.Interfaces
         Task<Result<ProductInfoDto>> GetProductAsync(
          Guid productId,
          CancellationToken cancellationToken);
+
+        Task<Result<IReadOnlyList<ProductInfoDto>>> GetProductsAsync(
+        IReadOnlyCollection<Guid> productIds,
+        CancellationToken cancellationToken);
     }
 }

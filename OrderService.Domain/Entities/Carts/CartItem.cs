@@ -15,7 +15,6 @@ namespace OrderService.Domain.Entities.Carts
         private CartItem(Guid productId, string productName, decimal unitPrice,
           int quantity)
         {
-            Id = Guid.NewGuid();
             ProductId = productId;
             ProductName = productName;
             UnitPrice = unitPrice;

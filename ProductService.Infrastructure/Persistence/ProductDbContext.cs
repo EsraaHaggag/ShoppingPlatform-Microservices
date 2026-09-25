@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using ProductService.Domain.Entities;
 using ProductService.Domain.Entities.Products;
 
 namespace ProductService.Infrastructure.Persistence
@@ -11,6 +12,7 @@ namespace ProductService.Infrastructure.Persistence
         {
         }
         public DbSet<Product> Products => Set<Product>();
+        public DbSet<ProcessedEvent> ProcessedEvents => Set<ProcessedEvent>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(

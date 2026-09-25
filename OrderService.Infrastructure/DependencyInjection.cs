@@ -1,4 +1,7 @@
 ﻿using BuildingBlocks.Common;
+using BuildingBlocks.Implementation;
+using BuildingBlocks.Interfaces;
+using BuildingBlocks.Messaging;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,6 +37,17 @@ namespace OrderService.Infrastructure
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<ICartRepository, CartRepository>();
             services.AddTransient<IProductServiceClient, ProductServiceClient>();
+            services.AddTransient<ICurrentUserService, CurrentUserService>();
+            services.AddTransient<IProcessedEventRepository, ProcessedEventRepository>();
+
+            services.AddScoped<
+              IOutboxRepository,
+              OutboxRepository>();
+
+            services.AddSingleton<
+              IEventPublisher,
+              KafkaEventPublisher>();
+
             return services;
         }
     }
