@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.5.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>d38f24e1-92b2-4f50-bede-7d936e524c43</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.5.4" />
+    <PackageReference Include="Aspire.Hosting.Kafka" Version="13.5.4" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="13.5.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OrderService.API\OrderService.API.csproj" />
+    <ProjectReference Include="..\PaymentService.API\PaymentService.API.csproj" />
+    <ProjectReference Include="..\ShoppingPlatform.Catalog.API\ProductService.API.csproj" />
+  </ItemGroup>
+
+</Project>
