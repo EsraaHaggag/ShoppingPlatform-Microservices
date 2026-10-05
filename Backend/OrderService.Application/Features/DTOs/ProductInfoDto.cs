@@ -4,5 +4,12 @@
         Guid Id,
         string Name,
         decimal Price,
-        int StockQuantity);
+        int StockQuantity,
+        List<ProductImageInfoDto> Images);
+
+    public record ProductImageInfoDto(
+    Guid Id,
+    string ImageUrl,
+    int DisplayOrder,
+    bool IsPrimary);
 }

@@ -25,8 +25,8 @@ namespace PaymentService.Infrastructure.Services.Paymob
         [JsonPropertyName("notification_url")]
         public string NotificationUrl { get; set; } = string.Empty;
 
-        //[JsonPropertyName("redirection_url")]
-        //public string RedirectionUrl { get; set; } = string.Empty;
+        [JsonPropertyName("redirection_url")]
+        public string RedirectionUrl { get; set; } = string.Empty;
     }
 
     public class PaymobItem

@@ -43,7 +43,7 @@ namespace OrderService.API.Controllers
             if (result.IsFailure)
                 return HandleFailure(result);
 
-            return Ok(result);
+            return Ok(result.Value);
         }
 
         [HttpPut("items/{productId:guid}")]

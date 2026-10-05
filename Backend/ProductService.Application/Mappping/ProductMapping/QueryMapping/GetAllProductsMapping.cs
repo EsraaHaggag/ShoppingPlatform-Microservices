@@ -1,4 +1,5 @@
 ﻿using ProductService.Application.Features.Products.DTOs;
+using ProductService.Domain.Entities;
 using ProductService.Domain.Entities.Products;
 
 namespace ProductService.Application.Mappping.ProductMapping
@@ -9,7 +10,7 @@ namespace ProductService.Application.Mappping.ProductMapping
         {
             CreateMap<Product, ProductDTO>();
             CreateMap<ProductDTO, ProductInfoDto>();
-
+            CreateMap<ProductImage, ProductImageDTO>();
 
         }
     }

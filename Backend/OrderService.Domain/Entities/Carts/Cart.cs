@@ -33,7 +33,7 @@ namespace OrderService.Domain.Entities.Carts
 
         public Result AddItem(Guid productId,
         string productName, decimal unitPrice,
-        int quantity)
+        int quantity, string? productImageUrl = null)
         {
             if (quantity <= 0)
                 return Result.Failure(
@@ -49,7 +49,7 @@ namespace OrderService.Domain.Entities.Carts
             }
 
             var item = CartItem.Create(productId, productName, unitPrice,
-                quantity);
+                quantity, productImageUrl);
             if (item.IsFailure)
                 return Result.Failure(item.Error);
             _items.Add(item.Value);

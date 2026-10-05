@@ -1,0 +1,134 @@
+<div class="product-card">
+
+  <!-- Image -->
+
+  <div class="image-container">
+
+    @if (product().images.length > 0) {
+
+      <img
+        class="product-image"
+        [src]="selectedImage()"
+        [alt]="product().name">
+
+    } @else {
+
+      <div class="image-placeholder">
+        No Image
+      </div>
+
+    }
+
+
+    @if (product().stockQuantity > 0) {
+
+      <span class="stock-badge">
+        In Stock
+      </span>
+
+    } @else {
+
+      <span class="stock-badge out">
+        Out of Stock
+      </span>
+
+    }
+
+  </div>
+
+
+  <!-- Thumbnails -->
+
+  @if (product().images.length > 1) {
+
+    <div class="thumbnails">
+
+      @for (
+        image of product().images;
+        track image.id
+      ) {
+
+        <button
+          type="button"
+          class="thumbnail"
+          [class.active]="
+            image.imageUrl === selectedImage()
+          "
+          (click)="selectImage(image.imageUrl)">
+
+          <img
+            [src]="image.imageUrl"
+            [alt]="product().name">
+
+        </button>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- Product Info -->
+
+  <div class="product-info">
+
+    <h2>
+      {{ product().name }}
+    </h2>
+
+
+    <p class="description">
+      {{ product().description }}
+    </p>
+
+
+    <div class="bottom-row">
+
+      <span class="price">
+        ${{ product().price | number:'1.2-2' }}
+      </span>
+
+      <<button
+      type="button"
+      class="cart-button"
+      [disabled]="
+        product().stockQuantity <= 0 ||
+        isAddingToCart()
+      "
+      (click)="addToCart()"
+      aria-label="Add to cart">
+
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2">
+
+        <path
+          d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6">
+        </path>
+
+        <circle cx="10" cy="20" r="1"></circle>
+        <circle cx="18" cy="20" r="1"></circle>
+
+      </svg>
+
+      </button>
+
+    </div>
+
+
+    <!-- Same global primary button -->
+
+    <a
+      class="btn btn-primary details-button"
+      [routerLink]="['/products', product().id]">
+
+      View Details →
+
+    </a>
+
+  </div>
+
+</div>

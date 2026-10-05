@@ -19,13 +19,24 @@ namespace ProductService.Infrastructure.Repositories
           CancellationToken cancellationToken)
         {
             return await _products
+                .Include(p => p.Images)
                 .Where(p => ids.Contains(p.Id))
                 .ToListAsync(cancellationToken);
         }
-
+        public override async Task<Product?> GetByIdAsync(Guid id,
+          CancellationToken cancellationToken)
+        {
+            return await _products
+                .Include(p => p.Images)
+                .FirstOrDefaultAsync(
+                    p => p.Id == id,
+                    cancellationToken);
+        }
         public IQueryable<Product> GetQueryable()
         {
-            return _products.Where(v => v.IsDeleted == false).AsQueryable();
+            return _products
+                .Include(p => p.Images)
+                .Where(v => v.IsDeleted == false).AsQueryable();
         }
     }
 }

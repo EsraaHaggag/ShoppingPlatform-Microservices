@@ -1,0 +1,36 @@
+<div class="payment-result-page">
+  <div class="payment-result-card">
+    @if (isSuccess()) {
+      <div class="result-icon success-icon">✓</div>
+      <h1>Payment Successful</h1>
+      <p>
+        Your payment has been completed successfully.
+      </p>
+      <a
+        routerLink="/products"
+        class="btn btn-primary">
+        Continue Shopping
+      </a>
+    }
+    @else {
+      <div class="result-icon failed-icon">!</div>
+      <h1>Payment Failed</h1>
+      <p>
+        We couldn't complete your payment.
+        You can return to your cart and try again.
+      </p>
+      <div class="result-actions">
+        <a
+          routerLink="/cart"
+          class="btn btn-primary">
+          Back to Cart
+        </a>
+        <a
+          routerLink="/products"
+          class="btn btn-secondary">
+          Continue Shopping
+        </a>
+      </div>
+    }
+  </div>
+</div>

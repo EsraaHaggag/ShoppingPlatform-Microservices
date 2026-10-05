@@ -1,0 +1,213 @@
+<div class="products-page">
+
+  <!-- Header -->
+
+  <section class="page-header">
+
+    <span class="eyebrow">
+      SHOPFLOW COLLECTION
+    </span>
+
+    <h1>
+      Discover Products
+    </h1>
+
+    <p>
+      Explore our collection and find what you need.
+    </p>
+
+  </section>
+
+
+  <!-- Toolbar -->
+
+  <section class="toolbar">
+
+    <div class="search-box">
+
+      <svg
+        class="search-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2">
+
+        <circle
+          cx="11"
+          cy="11"
+          r="7">
+        </circle>
+
+        <path
+          d="M20 20l-4-4">
+        </path>
+
+      </svg>
+
+
+      <input
+        type="text"
+        class="form-input"
+        placeholder="Search products..."
+        [value]="search()"
+        (input)="onSearchInput($event)"
+        (keyup.enter)="onSearch()">
+
+
+      <button
+        type="button"
+        class="search-button"
+        (click)="onSearch()"
+        aria-label="Search">
+
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2">
+
+          <circle
+            cx="11"
+            cy="11"
+            r="7">
+          </circle>
+
+          <path
+            d="M20 20l-4-4">
+          </path>
+
+        </svg>
+
+      </button>
+
+    </div>
+
+
+    <select
+      class="form-select sort-select"
+      [value]="sortBy() && sortDirection()
+        ? sortBy() + '-' + sortDirection()
+        : ''"
+      (change)="onSortChange($event)">
+
+      <option value="">
+        Sort by
+      </option>
+
+      <option value="price-asc">
+        Price: Low to High
+      </option>
+
+      <option value="price-desc">
+        Price: High to Low
+      </option>
+
+      <option value="name-asc">
+        Name: A to Z
+      </option>
+
+      <option value="name-desc">
+        Name: Z to A
+      </option>
+
+    </select>
+
+  </section>
+
+
+  <!-- Result Count -->
+
+  <div class="results-info">
+
+    <span>
+      {{ totalCount() }} products
+    </span>
+
+  </div>
+
+
+  <!-- Loading -->
+
+  @if (isLoading()) {
+
+    <div class="loading-state">
+      Loading products...
+    </div>
+
+  }
+
+
+  <!-- Products -->
+
+  @else if (products().length > 0) {
+
+    <section class="products-grid">
+
+      @for (
+        product of products();
+        track product.id
+      ) {
+
+        <app-product-card
+          [product]="product">
+        </app-product-card>
+
+      }
+
+    </section>
+
+
+    <!-- Pagination -->
+
+    <div class="pagination">
+
+      <button
+        type="button"
+        class="btn btn-secondary pagination-button"
+        [disabled]="currentPage() === 1"
+        (click)="previousPage()">
+
+        ← Previous
+
+      </button>
+
+
+      <span class="page-number">
+        Page {{ currentPage() }} of {{ totalPages() }}
+      </span>
+
+
+      <button
+        type="button"
+        class="btn btn-secondary pagination-button"
+        [disabled]="currentPage() === totalPages()"
+        (click)="nextPage()">
+
+        Next →
+
+      </button>
+
+    </div>
+
+  }
+
+
+  <!-- Empty -->
+
+  @else {
+
+    <div class="empty-state">
+
+      <h2>
+        No products found
+      </h2>
+
+      <p>
+        Try changing your search or filters.
+      </p>
+
+    </div>
+
+  }
+
+</div>

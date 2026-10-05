@@ -1,4 +1,5 @@
 ﻿using BuildingBlocks.Common;
+using BuildingBlocks.Interfaces;
 using MediatR;
 using OrderService.Application.Interfaces;
 using OrderService.Domain.Entities.Carts;
@@ -11,18 +12,22 @@ namespace OrderService.Application.Features.Carts.Commands.AddCartItem
     {
         private readonly ICartRepository _cartRepository;
         private readonly IProductServiceClient _productServiceClient;
+        private readonly ICurrentUserService _currentUserService;
 
         public AddCartItemHandler(
-            ICartRepository cartRepository, IProductServiceClient productServiceClient)
+            ICartRepository cartRepository, IProductServiceClient productServiceClient,
+            ICurrentUserService currentUserService)
         {
             _cartRepository = cartRepository;
             _productServiceClient = productServiceClient;
+            _currentUserService = currentUserService;
         }
 
         public async Task<Result> Handle(
         AddCartItemCommand request,
         CancellationToken cancellationToken)
         {
+            var currentUserId = _currentUserService.UserId;
             var productResult = await _productServiceClient.GetProductAsync(request.ProductId,
                     cancellationToken);
 
@@ -37,13 +42,12 @@ namespace OrderService.Application.Features.Carts.Commands.AddCartItem
                 CartErrors.InsufficientStock);
             }
 
-            var cart = await _cartRepository.GetByCustomerIdAsync(request.CustomerId,
-                cancellationToken);
+            var cart = await _cartRepository.GetByCustomerIdAsync(currentUserId, cancellationToken);
 
             if (cart is null)
             {
                 var cartResult =
-                    Cart.Create(request.CustomerId);
+                    Cart.Create(currentUserId);
 
                 if (cartResult.IsFailure)
                     return Result.Failure(cartResult.Error);
@@ -51,12 +55,15 @@ namespace OrderService.Application.Features.Carts.Commands.AddCartItem
                 cart = cartResult.Value!;
                 await _cartRepository.AddAsync(cart);
             }
-
+            var primaryImage = product.Images
+            .FirstOrDefault(x => x.IsPrimary)?.ImageUrl
+            ?? product.Images.FirstOrDefault()?.ImageUrl;
             var result = cart.AddItem(
                 product.Id,
                 product.Name,
                 product.Price,
-                request.Quantity);
+                request.Quantity,
+                primaryImage);
 
             if (result.IsFailure)
                 return Result.Failure(result.Error);

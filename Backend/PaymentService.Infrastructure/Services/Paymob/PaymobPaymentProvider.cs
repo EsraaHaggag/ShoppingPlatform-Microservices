@@ -36,7 +36,7 @@ namespace PaymentService.Infrastructure.Services.Paymob
             },
 
                 BillingData = new PaymobBillingData(),
-
+                RedirectionUrl = _options.RedirectionUrl,
                 NotificationUrl = _options.WebhookUrl,
                 SpecialReference = request.PaymentId.ToString()
             };

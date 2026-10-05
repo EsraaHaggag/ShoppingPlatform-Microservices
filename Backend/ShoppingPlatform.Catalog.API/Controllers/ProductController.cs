@@ -59,10 +59,9 @@ namespace ProductService.API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetAll(
-            CancellationToken cancellationToken)
+    [FromQuery] GetAllProductsQuery query,
+    CancellationToken cancellationToken)
         {
-            var query = new GetAllProductsQuery();
-
             var result = await _mediator.Send(
                 query,
                 cancellationToken);

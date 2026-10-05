@@ -1,0 +1,337 @@
+<div class="cart-page">
+
+  <div class="cart-container">
+
+    <!-- Header -->
+
+    <div class="page-header">
+
+      <div>
+        <h1>Shopping Cart</h1>
+
+        @if (cart()) {
+          <p>
+            {{ cart()!.items.length }}
+            {{ cart()!.items.length === 1 ? 'item' : 'items' }}
+            in your cart
+          </p>
+        }
+      </div>
+
+      @if (cart() && cart()!.items.length > 0) {
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="clearCart()">
+
+          Clear Cart
+
+        </button>
+      }
+
+    </div>
+
+
+    <!-- Loading -->
+
+    @if (isLoading()) {
+
+      <div class="loading-state">
+
+        <div class="loading-spinner"></div>
+
+        <p>
+          Loading your cart...
+        </p>
+
+      </div>
+
+    }
+
+
+    <!-- Error -->
+
+    @else if (errorMessage()) {
+
+      <div class="message-card error-card">
+
+        <h3>
+          Something went wrong
+        </h3>
+
+        <p>
+          {{ errorMessage() }}
+        </p>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="loadCart()">
+
+          Try Again
+
+        </button>
+
+      </div>
+
+    }
+
+
+    <!-- Empty Cart -->
+
+    @else if (!cart() || cart()!.items.length === 0) {
+
+      <div class="empty-cart">
+
+        <div class="empty-icon">
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7">
+
+            <path
+              d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.6L21 8H6">
+            </path>
+
+            <circle
+              cx="10"
+              cy="20"
+              r="1">
+            </circle>
+
+            <circle
+              cx="18"
+              cy="20"
+              r="1">
+            </circle>
+
+          </svg>
+
+        </div>
+
+        <h2>
+          Your cart is empty
+        </h2>
+
+        <p>
+          Looks like you haven't added anything to your cart yet.
+        </p>
+
+        <a
+          routerLink="/products"
+          class="btn btn-primary">
+
+          Continue Shopping
+
+        </a>
+
+      </div>
+
+    }
+
+
+    <!-- Cart -->
+
+    @else {
+
+      <div class="cart-layout">
+
+        <!-- Cart Items -->
+
+        <section class="cart-items">
+
+          @for (
+            item of cart()!.items;
+            track item.productId
+          ) {
+
+            <div class="cart-item">
+
+
+              <!-- Product Image -->
+
+              <a
+                [routerLink]="['/products', item.productId]"
+                class="item-image">
+
+                @if (item.productImageUrl) {
+
+                  <img
+                    [src]="item.productImageUrl"
+                    [alt]="item.productName">
+
+                } @else {
+
+                  <div class="image-placeholder">
+                    No Image
+                  </div>
+
+                }
+
+              </a>
+
+
+              <!-- Product Info -->
+
+              <div class="item-info">
+
+                <h2>
+
+                  <a
+                    [routerLink]="['/products', item.productId]"
+                    class="product-name-link">
+
+                    {{ item.productName }}
+
+                  </a>
+
+                </h2>
+
+                <p class="item-price">
+
+                  ${{ item.unitPrice | number:'1.2-2' }}
+
+                </p>
+
+
+                <!-- Quantity -->
+
+                <div class="quantity-control">
+
+                  <button
+                    type="button"
+                    (click)="
+                      decreaseQuantity(
+                        item.productId,
+                        item.quantity
+                      )
+                    "
+                    aria-label="Decrease quantity">
+
+                    −
+
+                  </button>
+
+                  <span>
+                    {{ item.quantity }}
+                  </span>
+
+                  <button
+                    type="button"
+                    (click)="
+                      increaseQuantity(
+                        item.productId,
+                        item.quantity
+                      )
+                    "
+                    aria-label="Increase quantity">
+
+                    +
+
+                  </button>
+
+                </div>
+
+              </div>
+
+
+              <!-- Item Total -->
+
+              <div class="item-actions">
+
+                <span class="item-total">
+
+                  ${{ item.totalPrice | number:'1.2-2' }}
+
+                </span>
+
+                <button
+                  type="button"
+                  class="remove-button"
+                  (click)="removeItem(item.productId)">
+
+                  Remove
+
+                </button>
+
+              </div>
+
+            </div>
+
+          }
+
+        </section>
+
+
+        <!-- Order Summary -->
+
+        <aside class="order-summary">
+
+          <h2>
+            Order Summary
+          </h2>
+
+          <div class="summary-row">
+
+            <span>
+              Subtotal
+            </span>
+
+            <span>
+              ${{ getCartTotal() | number:'1.2-2' }}
+            </span>
+
+          </div>
+
+          <div class="summary-row">
+
+            <span>
+              Shipping
+            </span>
+
+            <span class="free">
+              Free
+            </span>
+
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+
+            <span>
+              Total
+            </span>
+
+            <span>
+              ${{ getCartTotal() | number:'1.2-2' }}
+            </span>
+
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary checkout-button"
+            routerLink="/checkout">
+            Proceed to Checkout
+          </button>
+
+          <a
+            routerLink="/products"
+            class="continue-shopping">
+
+            ← Continue Shopping
+
+          </a>
+
+        </aside>
+
+      </div>
+
+    }
+
+  </div>
+
+</div>

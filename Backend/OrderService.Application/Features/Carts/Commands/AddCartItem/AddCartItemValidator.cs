@@ -10,9 +10,6 @@ namespace OrderService.Application.Features.Carts.Commands.AddCartItem
             RuleFor(x => x.ProductId)
                 .NotEmpty();
 
-            RuleFor(x => x.CustomerId)
-                .NotEmpty();
-
             RuleFor(x => x.Quantity)
                 .NotEmpty();
         }

@@ -7,6 +7,7 @@ namespace ProductService.Application.Features.Products.Queries.GetAllProduct
     public record GetAllProductsQuery
      : IRequest<Result<PaginatedResult<ProductDTO>>>
     {
+        public string? Search { get; init; }
         public decimal? MinPrice { get; init; }
         public decimal? MaxPrice { get; init; }
         public string? SortBy { get; init; }

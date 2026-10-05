@@ -36,8 +36,7 @@ namespace OrderService.Infrastructure.Services
                    CartErrors.ServiceUnavailable);
             }
 
-            var product =
-                await response.Content.ReadFromJsonAsync<ProductInfoDto>(
+            var product = await response.Content.ReadFromJsonAsync<ProductInfoDto>(
                     cancellationToken);
 
             if (product is null)

@@ -15,14 +15,15 @@ public class Product : CommonData
 
     [Timestamp]
     public byte[] RowVersion { get; set; }
-
+    private readonly List<ProductImage> _images = new();
+    public IReadOnlyCollection<ProductImage> Images =>
+        _images.AsReadOnly();
     private Product(
         string name,
         string description,
         decimal price,
         int stockQuantity)
     {
-        Id = Guid.NewGuid();
         Name = name;
         Description = description;
         Price = price;
@@ -30,10 +31,10 @@ public class Product : CommonData
     }
 
     public static Result<Product> Create(
-    string name,
-    string description,
-    decimal price,
-    int stockQuantity)
+        string name,
+        string description,
+        decimal price,
+        int stockQuantity)
     {
         if (price <= 0)
             return Result<Product>.Failure(ProductErrors.InvalidPrice);

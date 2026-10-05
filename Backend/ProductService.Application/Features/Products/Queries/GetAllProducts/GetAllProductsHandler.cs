@@ -19,40 +19,61 @@ namespace ProductService.Application.Features.Products.Queries.GetAllProduct
             _productRepository = productRepository;
             _mapper = mapper;
         }
-        public async Task<Result<PaginatedResult<ProductDTO>>> Handle(
-    GetAllProductsQuery request,
-    CancellationToken cancellationToken)
+        public async Task<Result<PaginatedResult<ProductDTO>>> Handle(GetAllProductsQuery request,
+          CancellationToken cancellationToken)
         {
             var query = _productRepository.GetQueryable();
 
+            if (!string.IsNullOrWhiteSpace(request.Search))
+            {
+                var search = request.Search.Trim();
+
+                query = query.Where(p =>
+                    p.Name.Contains(search) ||
+                    p.Description.Contains(search));
+            }
+
             if (request.MinPrice.HasValue)
-                query = query.Where(v => v.Price >= request.MinPrice.Value);
+            {
+                query = query.Where(p =>
+                    p.Price >= request.MinPrice.Value);
+            }
 
             if (request.MaxPrice.HasValue)
-                query = query.Where(v => v.Price <= request.MaxPrice.Value);
+            {
+                query = query.Where(p =>
+                    p.Price <= request.MaxPrice.Value);
+            }
 
-            if (!string.IsNullOrEmpty(request.SortBy))
+            if (!string.IsNullOrWhiteSpace(request.SortBy))
             {
                 switch (request.SortBy.ToLower())
                 {
                     case "price":
                         query = request.SortDirection?.ToLower() == "desc"
-                            ? query.OrderByDescending(v => v.Price)
-                            : query.OrderBy(v => v.Price);
+                            ? query.OrderByDescending(p => p.Price)
+                            : query.OrderBy(p => p.Price);
+                        break;
+
+                    case "name":
+                        query = request.SortDirection?.ToLower() == "desc"
+                            ? query.OrderByDescending(p => p.Name)
+                            : query.OrderBy(p => p.Name);
                         break;
 
                     default:
-                        query = query.OrderBy(v => v.Id);
+                        query = query.OrderBy(p => p.Id);
                         break;
                 }
             }
             else
             {
-                query = query.OrderBy(v => v.Id);
+                query = query.OrderBy(p => p.Id);
             }
 
             var result = await query
-                .ProjectTo<ProductDTO>(_mapper.ConfigurationProvider)
+                .ProjectTo<ProductDTO>(
+                    _mapper.ConfigurationProvider)
                 .ToPaginatedListAsync(
                     request.PageNumber,
                     request.PageSize);

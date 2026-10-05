@@ -1,0 +1,185 @@
+<div class="checkout-page">
+  <div class="checkout-container">
+    <div class="page-header">
+      <h1>Checkout</h1>
+      <p>Review your order before payment.</p>
+    </div>
+
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading your order...</p>
+      </div>
+    }
+    @else if (errorMessage()) {
+      <div class="message-card error-card">
+        <h2>Something went wrong</h2>
+        <p>{{ errorMessage() }}</p>
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="loadCart()">
+          Try Again
+        </button>
+      </div>
+    }
+    @else if (!cart() || cart()!.items.length === 0) {
+      <div class="empty-checkout">
+        <h2>Your cart is empty</h2>
+        <p>Add some products before proceeding to checkout.</p>
+        <a
+          routerLink="/products"
+          class="btn btn-primary">
+          Continue Shopping
+        </a>
+      </div>
+    }
+    @else if (checkoutIssues().length > 0) {
+      <div class="checkout-issues">
+        <div class="issues-header">
+          <h2>We couldn't proceed with your order</h2>
+          <p>Please review the following issues and update your cart.</p>
+        </div>
+
+        <div class="issues-list">
+          @for (item of checkoutIssues(); track item.productId) {
+            <div class="issue-item">
+              <div class="issue-icon">!</div>
+
+              <div class="issue-content">
+                <h3>{{ getProductName(item.productId) }}</h3>
+                <p>{{ getIssueMessage(item) }}</p>
+              </div>
+
+              <a
+                [routerLink]="['/products', item.productId]"
+                class="issue-action">
+                View Product
+              </a>
+            </div>
+          }
+        </div>
+
+        <a
+          routerLink="/cart"
+          class="btn btn-primary">
+          Back to Cart
+        </a>
+      </div>
+    }
+    @else {
+      <div class="checkout-layout">
+        <section class="checkout-content">
+          <div class="checkout-card">
+            <div class="card-header">
+              <div>
+                <h2>Review Your Order</h2>
+                <p>Check your items before proceeding to payment.</p>
+              </div>
+            </div>
+
+            <div class="checkout-items">
+              @for (
+                item of cart()!.items;
+                track item.productId
+              ) {
+                <div class="checkout-item">
+                  <div class="item-image">
+                    @if (item.productImageUrl) {
+                      <img
+                        [src]="item.productImageUrl"
+                        [alt]="item.productName">
+                    }
+                    @else {
+                      <div class="image-placeholder">
+                        No Image
+                      </div>
+                    }
+                  </div>
+
+                  <div class="item-info">
+                    <h3>{{ item.productName }}</h3>
+                    <p>
+                      ${{ item.unitPrice | number:'1.2-2' }}
+                      ×
+                      {{ item.quantity }}
+                    </p>
+                  </div>
+
+                  <span class="item-total">
+                    ${{ item.totalPrice | number:'1.2-2' }}
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <h2>Payment</h2>
+
+            <div class="payment-info">
+              <div class="payment-icon">$</div>
+
+              <div>
+                <h3>Online Payment</h3>
+                <p>
+                  You will be redirected to our secure payment page
+                  to complete your order.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <aside class="order-summary">
+          <h2>Order Summary</h2>
+
+          <div class="summary-row">
+            <span>Items</span>
+            <span>{{ cart()!.items.length }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span>Subtotal</span>
+            <span>
+              ${{ getCartTotal() | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <div class="summary-row">
+            <span>Shipping</span>
+            <span class="free">Free</span>
+          </div>
+
+          <div class="summary-divider"></div>
+
+          <div class="summary-total">
+            <span>Total</span>
+            <span>
+              ${{ getCartTotal() | number:'1.2-2' }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="btn btn-primary payment-button"
+            [disabled]="isProcessing()"
+            (click)="proceedToPayment()">
+            @if (isProcessing()) {
+              Processing...
+            }
+            @else {
+              Confirm & Proceed to Payment
+            }
+          </button>
+
+          <a
+            routerLink="/cart"
+            class="back-to-cart">
+            ← Back to Cart
+          </a>
+        </aside>
+      </div>
+    }
+  </div>
+</div>

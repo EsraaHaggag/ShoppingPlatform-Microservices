@@ -27,7 +27,16 @@ builder.Services.AddDbContext<PaymentDbContext>(options =>
 builder.Services.Configure<PaymobOptions>(
     builder.Configuration.GetSection("Paymob"));
 
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:4200")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 //Kafka
 //builder.Services.AddSingleton<IProducer<string, string>>(
@@ -66,6 +75,8 @@ builder.Services.AddHttpClient<
         client.BaseAddress = new Uri(
             builder.Configuration["Paymob:BaseUrl"]!);
     });
+
+//builder.Services.AddHostedService<KafkaTopicInitializer>();
 builder.Services.AddHostedService<OutboxPublisher>();
 
 var app = builder.Build();
@@ -77,7 +88,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors("AngularPolicy");
 app.UseAuthorization();
 
 app.MapControllers();

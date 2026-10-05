@@ -49,5 +49,6 @@ namespace ProductService.Application.Features.Products.Queries.GetProductById
 
             return Result<ProductDTO>.Success(productDto);
         }
+
     }
 }

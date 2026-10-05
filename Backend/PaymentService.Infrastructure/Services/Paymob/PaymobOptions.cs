@@ -7,5 +7,6 @@
         public string PublicKey { get; set; } = string.Empty;
         public string WebhookUrl { get; set; } = string.Empty;
         public string IntegrationId { get; set; } = string.Empty;
+        public string RedirectionUrl { get; set; } = string.Empty;
     }
 }
