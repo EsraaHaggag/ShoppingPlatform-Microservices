@@ -172,32 +172,4 @@ ng serve
 
 ---
 
-## 🗺️ Roadmap
 
-* [x] Product Service
-* [x] Order Service
-* [x] Payment Service
-* [x] Cart Management
-* [x] Checkout Workflow
-* [x] Stock Reservation & Compensation
-* [x] Kafka Event Communication
-* [x] Outbox Pattern
-* [x] Idempotent Consumers
-* [x] Saga-based Checkout
-* [x] Redis Caching
-* [x] Retry / Timeout / Circuit Breaker
-* [x] Health Checks
-* [x] Docker
-* [x] .NET Aspire
-* [ ] User & Authentication Service
-* [ ] JWT Authentication & Authorization
-* [ ] Customer / Admin Roles
-* [ ] Angular Frontend
-* [ ] Automated Testing
-* [ ] OpenTelemetry & Distributed Tracing
-* [ ] Metrics
-* [ ] CI/CD & Deployment
-
-
-* LinkedIn: *Add your LinkedIn profile*
-* Email: *Add your email*
